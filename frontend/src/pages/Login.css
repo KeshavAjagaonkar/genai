@@ -1,0 +1,103 @@
+/* Login.css */
+
+* {
+  box-sizing: border-box;
+}
+
+/* 1. THE BACKGROUND (Crucial for Glass effect) */
+.login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* We need a gradient so the transparency is visible */
+  background: linear-gradient(135deg, #141e30, #243b55);
+}
+
+/* 2. THE GLOSSY CARD */
+.login-container {
+  /* A. Semi-transparent dark background */
+  background: rgba(255, 255, 255, 0.1); 
+  
+  /* B. The Blur Magic */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* Safari support */
+
+  /* C. Subtle Border for the 'Glass Edge' look */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  /* Layout & Spacing */
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px; /* Slightly more rounded */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Soft deep shadow */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login p {
+  color: #fff;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  margin-top: 0;
+  letter-spacing: 1px;
+}
+
+/* 3. FORM & INPUTS */
+.login form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  
+  /* Make inputs slightly glossy too */
+  background: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.login input::placeholder {
+  color: #bbb;
+}
+
+.login input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #00c6ff;
+}
+
+/* 4. BUTTON */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  
+  /* Gradient button looks better on glass */
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.login-btn:hover {
+  transform: scale(1.02); /* Subtle zoom effect */
+}
