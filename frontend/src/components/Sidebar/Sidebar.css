@@ -1,28 +1,42 @@
-.sidebar{
-    background-color: #171717;
-    color:#b4b4b4;
+.sidebar {
+    /* Glass Effect */
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-right: var(--glass-border);
+    
     height: 100vh;
     width: 320px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 15px;
+    transition: width 0.3s ease;
 }
 
-.sidebar button{
+/* New Chat Button */
+.sidebar button {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin:10px;
-    padding:10px;
-    border:solid rgba(255,255,255,0.5);
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    
+    background: rgba(255, 255, 255, 0.05); /* Lighter glass */
+    border: var(--glass-border);
     border-radius: 12px;
-    background-color: transparent;
     cursor: pointer;
+    transition: 0.3s;
+    color: var(--text-main);
 }
-.sidebar button:hover{
-    background-color: rgba(180,180,180,0.05);
+
+.sidebar button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 198, 255, 0.3); /* Glow effect */
 }
-.logo{
+
+/* Logo Styling (Preserved from your original code) */
+.logo {
     height: 25px;
     width: 25px;  
     background-color: white;  
@@ -30,52 +44,58 @@
     object-fit: cover;
 }
 
-.history{
-    margin:10px;
-    padding:10px;
-    height: 100%;
-    overflow-y:auto;
-    scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #2a2a2a #1a1a1a; /* thumb color | track color */
+/* History Items */
+.history {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    /* Scrollbar styling */
+    scrollbar-width: thin; 
+    scrollbar-color: #444 transparent; 
 }
 
-.history li{
-    list-style-type: none;
+.history li {
+    list-style: none;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
     cursor: pointer;
-    padding:2px 5px;
-    margin-bottom: 0.3rem;
     font-size: 14px;
-    border:solid 10px transparent;
-    border-radius: 12px;
-    position:relative;
-    
+    color: var(--text-muted);
+    transition: 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Needed for trash icon positioning */
+    border: 1px solid transparent; /* Prevents layout shift on hover */
 }
 
-.history li:hover{
-    background-color: rgba(180,180,180,0.05);
+.history li:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-.sign{
-    margin:10px;
-    padding:10px;
-    font-size: 14px;
+/* Sign / Footer */
+.sign {
+    padding-top: 15px;
+    border-top: var(--glass-border);
     text-align: center;
-    border-top:solid 0.25px rgba(255,255,255, 0.5);
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
-.trashicon{
+/* Trash Icon (Preserved & Updated) */
+.trashicon {
     opacity: 0;
-    position:absolute;
-    right: 0;
-    
-
+    transition: opacity 0.2s ease;
 }
 
-.history li:hover .trashicon{
+.history li:hover .trashicon {
     opacity: 1;
-    color:#fff;
+    color: #fff;
 }
 
 .fa-trash:hover {
-    color:#f87171 !important;
-}   
+    color: #f87171 !important; /* Red hover color */
+}
