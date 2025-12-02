@@ -1,6 +1,7 @@
 import express from "express";
 import Thread from "../models/Thread.js"
 import { generateGeminiResponse } from "../utils/geminiUtils.js";
+import fetchUsers from "../middleware/fetchUsers.js";
 
 const router = express.Router();
 
@@ -22,10 +23,10 @@ router.post('/test', async (req, res) => {
 
 // Get all the thread
 
-router.get("/thread", async (req, res) => {
+router.get("/thread",fetchUsers, async (req, res) => {
     try {
 
-        const thread = await Thread.find({}).sort({ updatedAt: -1 });
+        const thread = await Thread.find({user:req.user.id}).sort({ updatedAt: -1 });
         res.json(thread);
     }
     catch (err) {
@@ -63,7 +64,7 @@ router.delete("/thread/:threadId", async (req, res) => {
     }
 });
 
-router.post("/chat", async (req, res) => {
+router.post("/chat",fetchUsers, async (req, res) => {
     const { threadId, message } = req.body;
     if (!threadId || !message) {
         res.status(400).json({ error: "missing required fields" });
@@ -73,12 +74,16 @@ router.post("/chat", async (req, res) => {
         if (!thread) {
             //create a new thread
             thread = new Thread({
+                user: req.user.id,
                 threadId,
-                title:message,
+                title:message.substring(0, 30),
                 message: [{ role: "user", content: message }]
             })
         }
         else {
+            if (thread.user.toString() !== req.user.id) {
+                return res.status(403).json({ error: "Not authorized to edit this chat" });
+            }
             thread.message.push({ role: "user", content: message });
         }
         const geminiReply = await generateGeminiResponse(message);

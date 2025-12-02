@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import cors from "cors";
 import { generateGeminiResponse } from "./utils/geminiUtils.js";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 
 import chatRoutes from "./routes/Chat.js"
@@ -17,7 +17,8 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(cookieParser());
 app.use('/api/auth', authRouter);
 app.use('/api', chatRoutes);//express routing 
 
