@@ -59,8 +59,8 @@ function Register() {
           />
           <button type="submit" className="login-btn">Register</button>
         </form>
-        <p style={{fontSize: '14px', marginTop: '10px', fontWeight: 'normal'}}>
-            Already have an account? <Link to="/login" style={{color: '#00c6ff'}}>Login</Link>
+        <p style={{marginTop: '15px', fontSize: '14px', color: '#b0b0b0'}}>
+          Already have an account? <Link to="/login" style={{color: '#6366f1'}}>Login here</Link>
         </p>
       </div>
     </div>

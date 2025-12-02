@@ -4,6 +4,7 @@ import { useState } from 'react';
 import './App.css'
 import Sidebar from './components/Sidebar/Sidebar.jsx';
 import ChatWindow from './components/Chatwindow/Chatwindow.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { MyContext } from './context/MyContext.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
@@ -37,10 +38,12 @@ function App() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register/>}></Route>
           <Route path='/chat' element={
+            <ProtectedRoute>
             <div className='app'>
                 <Sidebar />
                 <ChatWindow />
-            </div>} />
+              </div>
+              </ProtectedRoute>} />
           <Route path='/' element={<Navigate to="/login" />} />
         </Routes>
       </MyContext.Provider>

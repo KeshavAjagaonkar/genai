@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import './Login.css';
 import { useState } from 'react';
 
@@ -74,6 +74,9 @@ function Login() {
 
           <button type="submit" className="login-btn">Login</button>
         </form>
+        <p style={{marginTop: '15px', fontSize: '14px', color: '#b0b0b0'}}>
+          Don't have an account? <Link to="/register" style={{color: '#6366f1'}}>Register here</Link>
+        </p>
       </div>
     </div>
   )

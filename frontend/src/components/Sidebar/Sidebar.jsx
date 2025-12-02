@@ -1,10 +1,11 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect,useState } from 'react';
 import './Sidebar.css'
 import { MyContext } from '../../context/MyContext.jsx';
 import { v1 as uuidv1 } from 'uuid';
 
 function Sidebar() {
-    const { allThreads, setAllThreads,currThreadId,setNewchat,setPrompt,setReply,setCurrThreadId,setPrevChats} = useContext(MyContext);
+    const { allThreads, setAllThreads, currThreadId, setNewchat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
+    const [extended,setExtended]=useState(false);
     const getAllThreads = async () => {
 
         try {
@@ -70,32 +71,57 @@ function Sidebar() {
     }
     return (
         <>
-            <section className="sidebar">
-                {/* new chat button */}
-                <button onClick={creatNewChat}>
-                    <img className="logo" src="src/assets/blacklogo.png" alt="logo" />
-                    <span className='icon'><i className="fa-solid fa-pen-to-square"></i></span>
-                </button>
+            <section className={`sidebar ${extended ? "open" : "collapsed"}`}>
+            
+            {/* Top Section: Toggle & New Chat */}
+            <div className="top-section">
+                {/* Hamburger Menu to Toggle Sidebar */}
+                <div className="menu-icon" onClick={() => setExtended(prev => !prev)}>
+                    <i className="fa-solid fa-bars"></i>
+                </div>
 
-                {/* History */}
-                <ul className="history">
-                    {
-                        allThreads?.map((thread, idx) => (
-                            <li key={idx}
-                                onClick={(e) => changeThread(thread.threadId)}>{thread.title}<i className="fa-solid fa-trash trashicon" onClick={(e) => {
-                                    e.stopPropagation(); 
+                <div className="new-chat" onClick={creatNewChat}>
+                    <i className="fa-solid fa-plus"></i>
+                    {extended && <p>New Chat</p>}
+                </div>
+            </div>
+
+            {/* History List - Only show if extended */}
+            {extended && (
+                <div className="history-container">
+                    <p className="history-title">Recent</p>
+                    <ul className="history-list">
+                        {allThreads?.map((thread, idx) => (
+                            <li key={idx} onClick={() => changeThread(thread.threadId)} 
+                                className={thread.threadId === currThreadId ? "active" : ""}>
+                                <i className="fa-regular fa-message chat-icon"></i>
+                                <span className="title">{thread.title}</span>
+                                <i className="fa-solid fa-trash delete-icon" onClick={(e) => {
+                                    e.stopPropagation();
                                     deleteThread(thread.threadId);
                                 }}></i>
                             </li>
-                        ))
-                    }
-                </ul>
-
-                {/* sign */}
-                <div className="sign">
-                    <p>MindSync</p>
+                        ))}
+                    </ul>
                 </div>
-            </section>
+            )}
+
+            {/* Bottom Section */}
+            <div className="bottom-section">
+                <div className="bottom-item">
+                    <i className="fa-regular fa-circle-question"></i>
+                    {extended && <p>Help</p>}
+                </div>
+                <div className="bottom-item">
+                    <i className="fa-solid fa-clock-rotate-left"></i>
+                    {extended && <p>Activity</p>}
+                </div>
+                <div className="bottom-item">
+                    <i className="fa-solid fa-gear"></i>
+                    {extended && <p>Settings</p>}
+                </div>
+            </div>
+        </section>
         </>
     )
 }

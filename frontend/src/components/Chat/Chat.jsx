@@ -1,68 +1,76 @@
-import './chat.css'
-import { useContext, useEffect, useState,useRef } from 'react'
+import './Chat.css'
+import { useContext, useEffect, useState, useRef } from 'react'
 import { MyContext } from '../../context/MyContext.jsx';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import "highlight.js/styles/github-dark.css";
 
-
 function Chat() {
-    const { newChat, prevChats,reply } = useContext(MyContext);
-    const [latetestReply, setLatestReply] = useState(null);
+    const { newChat, prevChats, reply } = useContext(MyContext);
+    const [latestReply, setLatestReply] = useState(""); 
     const intervalRef = useRef(null);
+    const chatEndRef = useRef(null); 
 
     useEffect(() => {
-        //separetes the latest reply and and typing effect to it
-        if (reply === null) {
-            setLatestReply(null); 
+        if (!reply) {
+            setLatestReply("");
             return;
         }
-        if (intervalRef.current) clearInterval(intervalRef.current);
         
-        const content = reply.split(" ");
-        let idx = 0;
+        if (intervalRef.current) clearInterval(intervalRef.current);
+
+        let index = 0;
+        
         intervalRef.current = setInterval(() => {
-            idx += 4;
-            if (idx >= content.length) {
-                setLatestReply(reply);
+            // Speed: 20 chars every 30ms (Fast & Smooth)
+            index += 20; 
+
+            if (index >= reply.length) {
+                setLatestReply(reply); 
                 clearInterval(intervalRef.current);
             } else {
-                setLatestReply(content.slice(0, idx).join(" "));
+                setLatestReply(reply.slice(0, index)); 
             }
-         },
-            30)
+        }, 30);
+        
         return () => clearInterval(intervalRef.current);
-    },[reply]);
+    }, [reply]);
+
+    // Instant Scroll: Forces the view to stay at the bottom while typing
+    useEffect(() => {
+        if (chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+        }
+    }, [latestReply]); 
 
     return (
-        <>
-            {newChat && <h1>Start a new Chat!</h1>}
-            <div className='chats'>
-                {
-                    prevChats?.slice(0,-1).map((chat, idx) =>
-                        <div className={chat.role === "user" ? "userDiv" : "geminiDiv"} key={idx}>
-                            {
-                                chat.role === "user" ? <p className='userMessage'>{chat.content}</p> :
-                                    <ReactMarkdown rehypePlugins={rehypeHighlight}>{chat.content}</ReactMarkdown>
-                            }
-                        </div>)
-                }
-                {
-                    prevChats.length > 0 && (
-                    <>
-                        {
-                            latetestReply===null ? (<div className='geminiDiv' >
-                            <ReactMarkdown rehypePlugins={rehypeHighlight}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
-                    </div>):(<div className='geminiDiv' >
-                            <ReactMarkdown rehypePlugins={rehypeHighlight}>{latetestReply}</ReactMarkdown>
-                    </div>)
-                        }
-                    </>
-                    )
-                }
-     
-            </div>
-        </>
+        <div className='chats'>
+            {newChat && <h1 className="welcome-text">Start a new Chat!</h1>}
+            
+            {prevChats?.map((chat, idx) => {
+                // Check if this is the message currently being typed
+                const isLastMessage = idx === prevChats.length - 1;
+                const isBot = chat.role === "assistant";
+                const isTyping = isLastMessage && isBot && reply;
+
+                return (
+                    <div className={chat.role === "user" ? "userDiv" : "geminiDiv"} key={idx}>
+                        {chat.role === "user" ? (
+                            <p className='userMessage'>{chat.content}</p>
+                        ) : (
+                            // Render Markdown directly.
+                            // If typing, show 'latestReply'. If finished/history, show 'chat.content'
+                            <ReactMarkdown rehypePlugins={rehypeHighlight}>
+                                {isTyping ? latestReply : chat.content}
+                            </ReactMarkdown>
+                        )}
+                    </div>
+                )
+            })}
+            
+            {/* Invisible anchor to scroll to */}
+            <div ref={chatEndRef}></div>
+        </div>
     )
 }
 

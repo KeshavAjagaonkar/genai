@@ -1,101 +1,162 @@
+/* Sidebar Container */
 .sidebar {
-    /* Glass Effect */
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border-right: var(--glass-border);
-    
     height: 100vh;
-    width: 320px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 15px;
+    /* KEY FIX 1: Pushes Top content to top, Bottom content to bottom */
+    justify-content: space-between; 
+    background-color: #000000;
+    padding: 20px 15px;
     transition: width 0.3s ease;
+    border-right: 1px solid #27272a;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* New Chat Button */
-.sidebar button {
+/* Width states */
+.sidebar.open { width: 260px; }
+.sidebar.collapsed { width: 80px; align-items: center; }
+
+/* --- TOP SECTION --- */
+.top-section {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0; /* Prevents it from shrinking */
+}
+
+.menu-icon {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    color: #a1a1aa;
+}
+.menu-icon:hover { background-color: #27272a; color: white; }
+
+.new-chat {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     padding: 12px 15px;
-    margin-bottom: 20px;
-    
-    background: rgba(255, 255, 255, 0.05); /* Lighter glass */
-    border: var(--glass-border);
-    border-radius: 12px;
+    background-color: #18181b;
+    border-radius: 30px;
+    font-size: 14px;
+    color: #e4e4e7;
     cursor: pointer;
     transition: 0.3s;
-    color: var(--text-main);
+    border: 1px solid #27272a;
+    white-space: nowrap;
 }
 
-.sidebar button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 10px rgba(0, 198, 255, 0.3); /* Glow effect */
-}
-
-/* Logo Styling (Preserved from your original code) */
-.logo {
-    height: 25px;
-    width: 25px;  
-    background-color: white;  
+.sidebar.collapsed .new-chat {
+    padding: 12px;
+    justify-content: center;
     border-radius: 50%;
-    object-fit: cover;
+    width: 45px;
+    height: 45px;
 }
 
-/* History Items */
-.history {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    /* Scrollbar styling */
-    scrollbar-width: thin; 
-    scrollbar-color: #444 transparent; 
+.new-chat:hover { 
+    background-color: #27272a; 
+    border-color: #3f3f46;
 }
 
-.history li {
+/* --- HISTORY LIST (The Middle Part) --- */
+.history-container {
+    /* KEY FIX 2: Grows to fill empty space, pushing bottom section down */
+    flex: 1; 
+    /* KEY FIX 3: Allows scrolling when content is too long */
+    min-height: 0; 
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Enables scroll */
+    margin: 20px 0;
+    padding-right: 5px;
+    
+    /* Scrollbar Styling */
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+}
+
+/* Webkit Scrollbar (Chrome/Edge/Safari) */
+.history-container::-webkit-scrollbar { width: 5px; }
+.history-container::-webkit-scrollbar-track { background: transparent; }
+.history-container::-webkit-scrollbar-thumb { background-color: #333; border-radius: 10px; }
+.history-container::-webkit-scrollbar-thumb:hover { background-color: #555; }
+
+.history-title {
+    margin: 0 0 10px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a1a1aa;
+    flex-shrink: 0;
+}
+
+.history-list { padding: 0; margin: 0; }
+
+.history-list li {
     list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     padding: 10px 12px;
-    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #e4e4e7;
+    font-size: 14px;
+    transition: 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.history-list li:hover { background-color: #27272a; }
+.history-list li.active { background-color: #27272a; color: white; }
+
+.chat-icon { font-size: 14px; color: #a1a1aa; }
+.title { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.delete-icon { opacity: 0; transition: 0.2s; font-size: 12px; color: #ef4444; }
+.history-list li:hover .delete-icon { opacity: 1; }
+
+/* --- BOTTOM SECTION (Fixed to Bottom) --- */
+.bottom-section {
+    height: 24vh;
+    display: flex;
+    flex-direction: column;
+    justify-content:flex;
+    gap: 2px;
+    padding-top: 2px;
+    /* Only show border if sidebar is open to avoid weird line in collapsed mode */
+    border-top: 1px solid transparent; 
+    flex-shrink: 0;
+}
+
+.sidebar.open .bottom-section {
+    border-top: 1px solid #27272a;
+}
+
+.bottom-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: var(--text-muted);
+    color: #ececec;
     transition: 0.2s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative; /* Needed for trash icon positioning */
-    border: 1px solid transparent; /* Prevents layout shift on hover */
+    white-space: nowrap;
 }
 
-.history li:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.1);
+.sidebar.collapsed .bottom-item {
+    justify-content: center;
+    padding: 12px 0;
 }
 
-/* Sign / Footer */
-.sign {
-    padding-top: 15px;
-    border-top: var(--glass-border);
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-/* Trash Icon (Preserved & Updated) */
-.trashicon {
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.history li:hover .trashicon {
-    opacity: 1;
-    color: #fff;
-}
-
-.fa-trash:hover {
-    color: #f87171 !important; /* Red hover color */
-}
+.bottom-item:hover { background-color: #27272a; }
+.bottom-item i { width: 20px; text-align: center; }
