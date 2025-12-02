@@ -3,13 +3,34 @@ import Chat from '../Chat/Chat.jsx';
 import './ChatWindow.css';
 import { MyContext } from '../../context/MyContext';
 import { ScaleLoader } from 'react-spinners';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 function ChatWindow() {
+  const navigate = useNavigate();
   const { prompt, setPrompt, reply, setReply, currThreadId, setCurrThreadId , prevChats , setPrevChats,setNewchat} = useContext(MyContext);
   const [loading, setLoading] = useState(false);
+  const [showdropdown, setShowdropdown] = useState(false);
+
+  const toggleDropdown = () => { 
+    setShowdropdown(!showdropdown);
+  }
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      navigate('/login');
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+  
+
   
   const getReply = async () => {
     setLoading(true);
@@ -59,7 +80,16 @@ function ChatWindow() {
       {/* Navbar */}
       <div className='navbar'>
         <span>MindSync <i className="fa-solid fa-angle-down"></i></span>
-        <div className="userIconDiv"><span className="userIcon"><i className="fa-solid fa-user"></i></span></div>
+        <div className="userIconDiv"><span className="userIcon" onClick={toggleDropdown}><i className="fa-solid fa-user"></i></span>
+         {showdropdown && (
+                <div className="profile-dropdown">
+                    <div className="dropdown-item">Edit Profile</div>
+                    <div className="dropdown-item logout" onClick={handleLogout}>
+                        Logout <i className="fa-solid fa-right-from-bracket"></i>
+                    </div>
+                </div>
+            )} 
+        </div>
       </div>
       {/* chat component */}
       <Chat></Chat>

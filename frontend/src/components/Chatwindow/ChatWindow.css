@@ -95,3 +95,37 @@ input:focus {
     color: #b4b4b4;
 }
 
+/* Dropdown Menu */
+.profile-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #333;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    width: 150px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #ececec;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.dropdown-item.logout {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #ff6b6b; /* Reddish for logout */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -1,5 +1,5 @@
 import './chat.css'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState,useRef } from 'react'
 import { MyContext } from '../../context/MyContext.jsx';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
@@ -9,6 +9,7 @@ import "highlight.js/styles/github-dark.css";
 function Chat() {
     const { newChat, prevChats,reply } = useContext(MyContext);
     const [latetestReply, setLatestReply] = useState(null);
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         //separetes the latest reply and and typing effect to it
@@ -16,18 +17,22 @@ function Chat() {
             setLatestReply(null); 
             return;
         }
-        if (!prevChats?.length) return;
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        
         const content = reply.split(" ");
         let idx = 0;
-        const interval = setInterval(() => {
-            setLatestReply(content.slice(0, idx + 1).join(" "))
-            
-            idx++;
-            if (idx >= content.length) clearInterval(interval);
+        intervalRef.current = setInterval(() => {
+            idx += 4;
+            if (idx >= content.length) {
+                setLatestReply(reply);
+                clearInterval(intervalRef.current);
+            } else {
+                setLatestReply(content.slice(0, idx).join(" "));
+            }
          },
-            40)
-        return () => clearInterval;
-    },[prevChats,reply]);
+            30)
+        return () => clearInterval(intervalRef.current);
+    },[reply]);
 
     return (
         <>

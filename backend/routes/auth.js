@@ -32,8 +32,8 @@ router.post('/register', async (req, res) => {
     
 });
 
-router.post("/login", async(req, res) => {
-    try{
+router.post("/login", async (req, res) => {
+    try {
         const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({ msg: "Provide credentials" });
@@ -54,15 +54,19 @@ router.post("/login", async(req, res) => {
             sameSite: 'lax',
             maxAge: 3600000 // 1 hour
         });
-        res.status(200).json({ 
+        res.status(200).json({
             msg: "Login Successful",
-            user: { id: user._id, name: user.name, email: user.email } 
+            user: { id: user._id, name: user.name, email: user.email }
         });
         
     }
-    catch(err) {
-
+    catch (err) {
+        res.status(500).json({ error: err.message });
     }
-})
+});
 
+router.post("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.status(200).json({ msg: "Logged out successfully" });
+});
 export default router;
